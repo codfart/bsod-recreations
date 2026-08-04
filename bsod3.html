@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BSOD - cod-server</title>
+        <style>
+            html, body {
+                background-color: #000;
+                cursor: none;
+                overflow: hidden;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .stuff {
+                color: white;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                position: fixed;
+                top: 50vh;
+                left: 40vw;
+                transform: translate(-50%, -50%);
+                width: 60rem;
+            }
+
+            .stuff h1 {
+                font-size: 140pt;
+                font-weight: normal;
+                margin: 0 0 1rem 0;
+            }
+
+            .stuff p {
+                font-size: 30pt;
+                font-weight: lighter;
+                margin: 0;
+            }
+
+            .stuff p.percentage {
+                margin: 2rem 0;
+            }
+
+            /* --- */
+
+            .qr-wrapper img {
+                width: 7rem;
+                width: 7rem;
+                flex-shrink: 0;
+            }
+
+            .qr-wrapper {
+                display: flex;
+                gap: 1rem; /* lil spacing between image and text */
+            }
+
+            .qr-text p {
+                display: flex;
+                flex-direction: column;
+                font-size: 11pt;
+                opacity: 70%;
+                margin-bottom: .5rem;
+            }
+
+            .qr-text p.small {
+                font-size: 9pt;
+            }
+
+            .qr-text p.small.top {
+                margin-top: 3rem;
+            }
+        </style>
+        <style>
+            @keyframes notif_in {
+                from {transform: translateX(calc(100% + 1.5rem));}
+                to {transform: translateX();}
+            }
+            @keyframes notif_out {
+                from {transform: translateX();}
+                to {transform: translateX(calc(100% + 1.5rem));}
+            }
+
+            .notif {
+                width: fit-content;
+                height: fit-content;
+                position: fixed;
+                right: 1rem;
+                top: 1rem;
+            }
+
+            .notif p {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: white;
+                width: fit-content;
+                height: fit-content;
+                background-color: rgba(255, 255, 255, 0.3);
+                box-shadow: 0 .3rem 0 rgba(255, 255, 255, 0.2);
+                margin: 0 0 .8rem auto;
+                padding: .5rem;
+                border-radius: .6rem;
+                transform-origin: right;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- where the <p> notifications go -->
+        <div class="notif">
+        </div>
+
+        <div class="stuff">
+            <h1>:(</h1>
+            <p>Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</p>
+            <p class="percentage">0% complete</p>
+            <div class="qr-wrapper">
+                <img src="qrcode.png">
+                <div class="qr-text">
+                    <p>For more information about this issue and possible fixes, visit https://www.windows.com/stopcode</p>
+                    <p class="small top">If you call a support person, give then this info:</p>
+                    <p class="small">Stop code: NEVER_GONNA_GIVE_YOU_UP</p>
+                </div>
+            </div>
+        </div>
+        <script>
+            // noah's randint thing
+            const origionalRandom = Math.random;
+            const rand = (minOrMax = undefined, max = undefined) => {
+                if (typeof minOrMax !== "undefined" && typeof max !== "undefined") {
+                    return origionalRandom() * (max - minOrMax) + minOrMax;
+                } else if (typeof minOrMax !== "undefined") {
+                    return origionalRandom() * minOrMax;
+                } else return origionalRandom();
+            };
+            Math.random = rand;
+
+
+
+            // percentage incrementation
+            const percent_p = document.querySelector("p.percentage");
+            let percent = 0;
+            let direction = 0;
+
+            function update() {
+                if (percent === 0) direction = 0;
+                if (percent === 99) direction = 1;
+
+                if (direction === 0) percent++;
+                if (direction === 1) percent--;
+
+                percent_p.textContent = percent + "% complete";
+
+                setTimeout(update, Math.round(Math.random(1, 10)) * 100);
+            };
+            update();
+
+
+            
+            // notification creation
+            function notification(text) {
+                const notif = document.createElement("p");
+                notif.textContent = text;
+                document.querySelector("div.notif").append(notif);
+
+                notif.style.animation = "notif_in 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards";
+                setTimeout(() => notif.style.animation = "notif_out 0.4s cubic-bezier(0.5, 0, 1, 1) forwards", 2000);
+                setTimeout(() => notif.remove(), 2400);
+            };
+
+
+
+            // change bg color
+            let color = 0
+            document.addEventListener('keydown', (event) => {
+                if (event.key === '1') {
+                    if (color === 0) {
+                        document.documentElement.style.backgroundColor = "#1165c1";
+                        document.body.style.backgroundColor = "#1165c1";
+                        color = 1;
+                        notification("bg_color = \"#1165c1\"");
+                    } else {
+                        document.documentElement.style.backgroundColor = "#000";
+                        document.body.style.backgroundColor = "#000";
+                        color = 0;
+                        notification("bg_color = \"#000\"");
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
