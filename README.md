@@ -1,4 +1,4 @@
-<h1 align="center">bsod-recreations</h1>
+<h1 align="center">:(&nbsp; bsod-recreations &nbsp; &nbsp;</h1>
 <p align="center">A simple recreation of the Windows 10/11 BSOD screens</p>
 
 ---
